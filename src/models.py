@@ -71,7 +71,7 @@ class People(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(120), nullable=False)
     gender = Column(Enum('male', 'female', 'n/a', name="gender_enum"), nullable=False)
-    height = Column(Integer, unique=False, nullable=False)
+    height = Column(Integer, nullable=False)
     hair_color = Column(String(120), nullable=False)
     skin_color = Column(String(120), nullable=False)
     birth_year = Column(String(120), nullable=True)
@@ -90,27 +90,6 @@ class People(Base):
             "skin_color": self.skin_color,
             "homeworld": self.planet.serialize() if self.planet else None,
         }
-class Post(Base):
-    __tablename__ = 'post'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    planet_id = Column(Integer, ForeignKey('planets.id'), nullable=True)
-    person_id = Column(Integer, ForeignKey('people.id'), nullable=True)
-    created_at = Column(DateTime, default=func.now())
-
-    user = relationship('User', back_populates='posts')
-    planet = relationship('Planets', back_populates='posts')
-    person = relationship('People', back_populates='posts')
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "planet": self.planet.name if self.planet else None,
-            "person": self.person.name if self.person else None,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
-
 class Favorites(Base):
     __tablename__ = 'favorites'
     id = Column(Integer, primary_key=True)
