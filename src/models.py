@@ -91,25 +91,43 @@ class People(Base):
             "homeworld": self.planet.serialize() if self.planet else None,
         }
 class Favorites(Base):
-    __tablename__ = 'favorites'
+    _tablename_ = 'favorites'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    planet_id = Column(Integer, ForeignKey('planets.id'))
-    people_id = Column(Integer, ForeignKey('people.id'))
-    created_at = Column(DateTime, default=func.now())
-
-    user = relationship('User', back_populates='favorites')
-    planet = relationship('Planets', back_populates='favorites')
-    people = relationship('People', back_populates='favorites')
+    tipo = Column(Enum('planets', 'people', name="type_enum"), nullable=False)
+    referencia_id = Column(Integer, nullable=False)
     
 
+    user = relationship('User', back_populates='favorites')
+    
     def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "planet": self.planet.serialize() if self.planet else None,
-            "people": self.people.serialize() if self.people else None,
+            "type": self.type,
+            "referencia_id": self.referencia_id,
+            
         }
+#This is another favorites model but the implementation of this one would leave the db in some column in null.    
+# class Favorites(Base):
+#     __tablename__ = 'favorites'
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+#     planet_id = Column(Integer, ForeignKey('planets.id'))
+#     people_id = Column(Integer, ForeignKey('people.id'))
+#     created_at = Column(DateTime, default=func.now())
 
+#     user = relationship('User', back_populates='favorites')
+#     planet = relationship('Planets', back_populates='favorites')
+#     people = relationship('People', back_populates='favorites')
+    
+
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "user_id": self.user_id,
+#             "planet": self.planet.serialize() if self.planet else None,
+#             "people": self.people.serialize() if self.people else None,
+#         }
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
