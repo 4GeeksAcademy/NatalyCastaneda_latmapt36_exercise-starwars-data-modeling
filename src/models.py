@@ -94,7 +94,7 @@ class Favorites(Base):
     _tablename_ = 'favorites'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    tipo = Column(Enum('planets', 'people', name="type_enum"), nullable=False)
+    type = Column(Enum('planets', 'people', name="type_enum"), nullable=False)
     referencia_id = Column(Integer, nullable=False)
     
 
